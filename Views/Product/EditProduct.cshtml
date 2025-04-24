@@ -1,0 +1,56 @@
+﻿@model Product
+
+<form asp-controller="Product" asp-action="EditProduct" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProductId" />
+    <table class="table table-light">
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label asp-for="productName"></label>:
+                    <input asp-for="productName" type="text" class="form-control" />
+                    <span asp-validation-for="productName" class="text-danger"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label asp-for="description"></label>:
+                    <input asp-for="description" type="text" class="form-control" />
+                    <span asp-validation-for="description" class="text-danger"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label asp-for="size"></label>:
+                    <input asp-for="size" type="text" class="form-control" />
+                    <span asp-validation-for="size" class="text-danger"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label asp-for="price"></label>:
+                    <input asp-for="price" type="text" class="form-control" />
+                    <span asp-validation-for="price" class="text-danger"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <label asp-for="ImagePath"></label>:
+                    <input type="file" name="ImagePath" class="form-control-file" />
+                </div>
+            </td>
+        </tr>
+
+            <td>
+                <input type="submit" value="Save" class="btn-primary" />
+            </td>
+        </tr>
+    </table>
+</form>

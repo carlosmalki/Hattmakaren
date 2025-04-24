@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/AdminMyPage.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <title>Admin Dashboard Panel</title>
+</head>
+<body>
+    <nav>
+    <div class="menu-items">
+        <ul class="nav-links">
+            <li>
+                <a asp-area="" asp-controller="Admin" asp-action="AdminEnquiries">
+                    <i class="uil uil-files-landscapes"></i>
+                    <span class="link-name">Enquiries</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Admin" asp-action="AdminOrders">
+                    <i class="uil uil-files-landscapes"></i>
+                    <span class="link-name">Orders</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Material" asp-action="Material">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Order materials</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="ShippingBill" asp-action="OrderList">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Print waybill</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Admin" asp-action="AdminOrderHistory">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Order history</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Message" asp-action="SendOffer">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Send offer</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    </nav>
+    @{
+        var message = TempData["Message"] as string;
+    }
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-info" role="alert">
+            @message
+        </div>
+    }
+
+    @{
+        var himessage = TempData["DeclineMessage"] as string;
+    }
+
+    @if (!string.IsNullOrEmpty(himessage))
+    {
+        <div class="alert alert-info" role="alert">
+            @himessage
+        </div>
+    }
+    <section class="dashboard">
+        <div class="dash-content">
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-clock-three"></i>
+                    <span class="text">Incoming Enquiries</span>
+                </div>
+                <div class="activity-data">
+                    @foreach (var enquiry in Model)
+                    {
+                        @if (enquiry != null && !enquiry.isInProgress)
+                        {
+                            <div class="data">
+                                <div class="data-item">
+                                    <span class="data-title">Customer</span>
+                                    @if (enquiry.Customer != null)
+                                    {
+                                        <span class="data-list">
+                                            @enquiry.Customer.firstName @enquiry.Customer.lastName
+                                        </span>
+
+                                        @foreach (var address in enquiry.Customer.addresses)
+                                        {
+                                            <span>
+                                                Streetname: @address.streetName City: @address.countryName Zipcode: @address.zipCode
+                                            </span>
+                                        }
+                                    }
+                                </div>
+
+
+
+                                <div class="data-item">
+                                    <form method="post" action="@Url.Action("ChangeStatus", "Admin")">
+                                        <input type="hidden" name="enquiryId" value="@enquiry.EnquiryId" />
+
+                                        @if (enquiry.isInProgress)
+                                        {
+                                            <text>In progress</text>
+                                        }
+                                        else
+
+                                        {
+                                            <button type="submit" name="status" value="toggle">
+                                                <text>Mark as in progress</text>
+                                            </button>
+
+                                        }
+                                    </form>
+                                </div>
+
+                                <!-- Knapp för att visa mer information -->
+                                <button class="toggle-btn" type="button">View more enquiry information</button>
+                                <div class="extra-info" style="display: none;">
+                                    @if (enquiry != null)
+                                    {
+                                        <p>Other information:</p>
+                                        <p>
+                                            Headsize: @enquiry.headSize
+                                            Font:  @enquiry.font Consent hat: @enquiry.consentHat Fabric Material: @enquiry.fabricMaterial Description: @enquiry.description Color: @enquiry.color
+                                            Special effect materials: @enquiry.specialEffectMaterials
+                                            Text on hat: @enquiry.textOnHat Get in store: @enquiry.getInStore
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Lyssna på klick på alla knappar med klassen 'toggle-btn'
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                // Hitta nästa syskon till knappen
+                const extraInfo = this.nextElementSibling;
+                // Toggle display av den extra informationen
+                if (extraInfo.style.display === 'none') {
+                    extraInfo.style.display = 'block';
+                } else {
+                    extraInfo.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
